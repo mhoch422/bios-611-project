@@ -10,6 +10,7 @@ clean:
 
 derived_data/stop_info.csv\
  derived_data/municipality_stops.csv\
+ derived_data/fin_info.csv\
  derived_data/municipality_stops_NoBoston.csv: preprocess.R\
  source_data/Bus_Stops.csv\
  source_data/RT_stops.csv\
@@ -17,6 +18,8 @@ derived_data/stop_info.csv\
 	Rscript preprocess.R
 
 figures/population_stops.png\
+ figures/income_stops_noBoston.png\
+ figures/eqv_stops_noBoston.png\
  figures/population_stops_noBoston.png: initial_figures.R\
  derived_data/municipality_stops.csv\
  derived_data/municipality_stops_NoBoston.csv
