@@ -1,6 +1,36 @@
 library(tidyverse)
 library(ggplot2)
 library(plotly)
+library(sf)
+library(geojsonsf)
+
+neighbor_sf <- geojson_sf("/home/rstudio/project/source_data/Boston_Neighborhoods.geojson")
+boston_demo <- read.csv("derived_data/boston_demo.csv")
+neighbor_sf <- left_join(neighbor_sf, boston_demo, by = c("Name" = "neighborhood"))
+
+boston_map_1 <- ggplot(neighbor_sf) +
+  geom_sf(aes(fill=n))
+ggsave("figures/boston_map_numstops.png", plot= boston_map_1)
+
+boston_map_2 <- ggplot(neighbor_sf) + 
+  geom_sf(aes(fill=percapita))
+ggsave("figures/boston_map_income.png", plot= boston_map_2)
+
+boston_map_3 <- ggplot(neighbor_sf) + 
+  geom_sf(aes(fill=population))
+ggsave("figures/boston_map_pop.png", plot= boston_map_3)
+
+g_bp <- ggplot(boston_demo, aes(population, n)) +
+  geom_point(alpha = 0.5) +
+  labs(title = "Neighborhood Population and # Stops", x= "Population", y = "# Stops") +
+  scale_y_continuous(limits = c(0, 400), breaks = seq(0,600, 50)) 
+ggsave("figures/boston_population_stops.png", plot=g_bp)
+
+g_bi <- ggplot(boston_demo, aes(percapita, n)) +
+  geom_point(alpha = 0.5) +
+  labs(title = "Neighborhood Income and # Stops", x= "Per-Capita Income", y = "# Stops") +
+  scale_y_continuous(limits = c(0, 400), breaks = seq(0,400, 50)) 
+ggsave("figures/boston_income_stops.png", plot=g_bi)
 
 pop_stops <- read.csv("derived_data/municipality_stops.csv")
 pop_stops_nb <- read.csv("derived_data/municipality_stops_NoBoston.csv")

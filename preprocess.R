@@ -1,5 +1,8 @@
 library(tidyverse)
 library(xlsx)
+library(sf)
+library(geojsonsf)
+library(spData)
 
 options(scipen=999)
 simplify_strings <- function(s){
@@ -22,16 +25,39 @@ neigh <-read.xlsx('/home/rstudio/project/source_data/Boston_Neighborhoods_tables
 neigh_table <- as_tibble(neigh)
 names(neigh_table) <- c("Neighborhood", "Population", "Total_Income", "PerCapita", "Blank")
 neigh_table <- neigh_table[6:27,1:4]
+names(neigh_table) <- simplify_strings(names(neigh_table));
+
+neighbor_sf <- geojson_sf("/home/rstudio/project/source_data/Boston_Neighborhoods.geojson")
 
 bus_stops <- read.csv("/home/rstudio/project/source_data/Bus_Stops.csv")
 bus_stops <- bus_stops %>% add_column(stop_type="Bus")
 rapid_stops <- read.csv("/home/rstudio/project/source_data/RT_stops.csv")
 rapid_stops <- rapid_stops %>% add_column(stop_type="Rapid_Transit")
+rapid_stops[rapid_stops$stop_name=="Boston College",]$municipality <- "Newton"
 
 transit_stops <- rbind(bus_stops, rapid_stops)
 transit_stops %>% write_csv("derived_data/stop_info.csv")
 
-boston_stops <- transit_stops %>% filter(municipality=="Boston") %>% group_by(Neighborhood) %>% tally()
+boston_stops <- transit_stops %>% filter(municipality=="Boston")
+## Convert points data.frame to an sf POINTS object
+boston_stops$point <- st_as_sf(boston_stops[,1:2], coords = 1:2, crs = 4326)
+
+## Transform spatial data to some planar coordinate system
+## (e.g. Web Mercator) as required for geometric operations
+t_neighbor <- st_transform(neighbor_sf, crs = 3857)
+boston_stops$point <- st_transform(boston_stops$point, crs = 3857)
+
+## Find names of state (if any) intersected by each point
+hood_names <- t_neighbor[["Name"]]
+ii <- as.integer(st_intersects(boston_stops$point, t_neighbor))
+boston_stops$neighborhood<-hood_names[ii]
+
+boston_stops[,c(1:35,37)] %>% write_csv("derived_data/boston_stop_info.csv")
+names(t_neighbor) <- simplify_strings(names(t_neighbor))
+
+boston_stops <- boston_stops %>% group_by(neighborhood) %>% tally()
+boston_demo <- boston_stops %>% left_join(neigh_table, by="neighborhood")
+boston_demo %>% write_csv("derived_data/boston_demo.csv")
 
 names(transit_stops) <- simplify_strings(names(transit_stops));
 stop_tally <- transit_stops %>% group_by(municipality) %>% tally()
@@ -77,7 +103,7 @@ pop_stops <- stop_tally %>%
   inner_join(metro_pop, by = "municipality") %>% 
   inner_join(mass_fin, by = "municipality")
 pop_stops <- pop_stops %>% mutate(across(everything(), rm_commas)) %>% 
-  mutate_at(vars(n, x2020), as.numeric)
+  mutate_at(vars(n, population), as.numeric)
 pop_stops %>% write_csv("derived_data/municipality_stops.csv")
 
 
