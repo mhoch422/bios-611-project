@@ -1,0 +1,64 @@
+---
+title: "Project Report"
+output: pdf_document
+author: "Molly Hoch"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, out.width='400px', out.height = '200px')
+```
+
+## Bus/Rapid Transit Stops 
+
+To begin analyzing my data, I wanted to look at some basic comparisons between demographic data and the number of bus/rapid transit stops in different cities served by the MBTA.
+
+To start, a plot of municipality population and the number of stops in said municipality:
+
+![](figures/population_stops.png)
+
+It's hard to get a sense for what relationship (if any) there for municipalities other than Boston (which has a population over 600K and nearly 2000 stops).
+
+\newpage
+
+I recreated the above plot, removing Boston:
+
+![](figures/population_stops_noBoston.png)
+
+Some other demographics compared with number of stops include per-capita income:
+
+![](figures/income_stops_noBoston.png)
+
+\newpage
+
+And property value:
+
+![](figures/eqv_stops_noBoston.png)
+
+An initial look at these plots suggests that population is the greatest driving force behind number of stops for municipalities outside of Boston (this is something I intend to look at more).
+
+I also wanted to begin looking at the data for Boston proper. The city of Boston has 26 neighborhoods, and demographic information is available for 22 of them. Using a geojson file and census data, both made available by the city of Boston, I made the following maps to get a sense for the neighborhoods.
+
+First, mapping the population by neighborhood:
+
+![](figures/boston_map_pop.png)
+
+\newpage
+
+Then, mapping the number of stops by neighborhood:
+
+![](figures/boston_map_numstops.png)
+
+\newpage
+
+And lastly, mapping the per-capita income by neighborhood:
+
+![](figures/boston_map_income.png)
+
+\newpage
+
+After making these maps, I created similar figures to those for non-boston stops, both plotting population and number of stops, and income and number of stops.
+
+![](figures/boston_population_stops.png)
+
+![](figures/boston_income_stops.png)
+

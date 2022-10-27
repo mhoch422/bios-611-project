@@ -12,4 +12,6 @@ RUN R -e "install.packages('xlsx');"
 RUN R -e "install.packages('sf');"
 RUN R -e "install.packages('geojsonsf');"
 RUN R -e "install.packages('spData');"
+RUN R -e "install.packages('markdown');"
+RUN Rscript --no-restore --no-save -e "update.packages(ask = FALSE);"
 

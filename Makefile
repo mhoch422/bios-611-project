@@ -3,6 +3,7 @@
 clean:
 	rm -rf figures
 	rm -rf derived_data
+	rm -rf writeup.pdf
 
 .created-dirs:
 	mkdir -p figures
@@ -37,5 +38,13 @@ figures/population_stops.png\
 	Rscript initial_figures.R
 
 # Build the final report for the project.
-writeup.pdf: figures/bpi_intensity_by_group.png figures/demo-projection.png figures/outcomes_by_demographic_clustering.png
-	pdflatex writeup.tex
+writeup.pdf: figures/population_stops.png\
+ figures/boston_income_stops.png\
+ figures/boston_population_stops.png\
+ figures/boston_map_income.png\
+ figures/boston_map_pop.png\
+ figures/boston_map_numstops.png\
+ figures/income_stops_noBoston.png\
+ figures/eqv_stops_noBoston.png\
+ figures/population_stops_noBoston.png
+	Rscript -e "rmarkdown::render('writeup.Rmd')"

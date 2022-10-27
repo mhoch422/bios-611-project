@@ -4,33 +4,35 @@ library(plotly)
 library(sf)
 library(geojsonsf)
 
+options(scipen=999)
+
 neighbor_sf <- geojson_sf("/home/rstudio/project/source_data/Boston_Neighborhoods.geojson")
 boston_demo <- read.csv("derived_data/boston_demo.csv")
 neighbor_sf <- left_join(neighbor_sf, boston_demo, by = c("Name" = "neighborhood"))
 
 boston_map_1 <- ggplot(neighbor_sf) +
   geom_sf(aes(fill=n))
-ggsave("figures/boston_map_numstops.png", plot= boston_map_1)
+ggsave("figures/boston_map_numstops.png", width = 6, height = 4, plot= boston_map_1)
 
 boston_map_2 <- ggplot(neighbor_sf) + 
   geom_sf(aes(fill=percapita))
-ggsave("figures/boston_map_income.png", plot= boston_map_2)
+ggsave("figures/boston_map_income.png", width = 6, height = 4,  plot= boston_map_2)
 
 boston_map_3 <- ggplot(neighbor_sf) + 
   geom_sf(aes(fill=population))
-ggsave("figures/boston_map_pop.png", plot= boston_map_3)
+ggsave("figures/boston_map_pop.png", width = 6, height = 4,  plot= boston_map_3)
 
 g_bp <- ggplot(boston_demo, aes(population, n)) +
   geom_point(alpha = 0.5) +
   labs(title = "Neighborhood Population and # Stops", x= "Population", y = "# Stops") +
   scale_y_continuous(limits = c(0, 400), breaks = seq(0,600, 50)) 
-ggsave("figures/boston_population_stops.png", plot=g_bp)
+ggsave("figures/boston_population_stops.png", width = 5, height = 3,  plot=g_bp)
 
 g_bi <- ggplot(boston_demo, aes(percapita, n)) +
   geom_point(alpha = 0.5) +
   labs(title = "Neighborhood Income and # Stops", x= "Per-Capita Income", y = "# Stops") +
   scale_y_continuous(limits = c(0, 400), breaks = seq(0,400, 50)) 
-ggsave("figures/boston_income_stops.png", plot=g_bi)
+ggsave("figures/boston_income_stops.png", width = 5, height = 3,  plot=g_bi)
 
 pop_stops <- read.csv("derived_data/municipality_stops.csv")
 pop_stops_nb <- read.csv("derived_data/municipality_stops_NoBoston.csv")
@@ -40,24 +42,24 @@ g <- ggplot(pop_stops, aes(population, n)) +
   geom_point(alpha = 0.5) +
   labs(title = "Municipality Population and # Stops", x= "Population", y = "# Stops") +
   scale_y_continuous(limits = c(0, 2000), breaks = seq(0,2000, 200)) 
-ggsave("figures/population_stops.png", plot=g)
+ggsave("figures/population_stops.png", width = 5, height = 3,  plot=g)
 
 
 g_nb <-ggplot(pop_stops_nb, aes(population, n)) +
   geom_point(alpha = 0.5) +
-  labs(title = "Municipality Population and # Stops (Boston Removed)", x= "Population", y = "# Stops") +
+  labs(title = "Municipality Population and # Stops", x= "Population", y = "# Stops") +
   scale_y_continuous(limits = c(0, 600), breaks = seq(0,600, 50)) 
-ggsave("figures/population_stops_noBoston.png", plot=g_nb)
+ggsave("figures/population_stops_noBoston.png", width = 5, height = 3,  plot=g_nb)
 
 g_inc <-ggplot(pop_stops_nb, aes(dor_income_per_capita_19, n)) +
   geom_point() +
-  labs(title = "Per-Capita Income 2019 and # Stops (Boston Removed)", x = "Per-Capita Income", y= "# Stops")
-ggsave("figures/income_stops_noBoston.png", plot=g_inc)
+  labs(title = "Per-Capita Income 2019 and # Stops", x = "Per-Capita Income", y= "# Stops")
+ggsave("figures/income_stops_noBoston.png", width = 5, height = 3,  plot=g_inc)
 
 g_eqv <-ggplot(pop_stops_nb, aes(eqv_per_capita_19, n)) +
   geom_point() +
-  labs(title = "Per-Capita Property Value 2019 and # Stops (Boston Removed)", x = "Per-Capita EQV", y= "# Stops")
-ggsave("figures/eqv_stops_noBoston.png", plot=g_eqv)
+  labs(title = "Per-Capita Property Value 2019 and # Stops", x = "Per-Capita EQV", y= "# Stops")
+ggsave("figures/eqv_stops_noBoston.png", width = 5, height = 3,  plot=g_eqv)
 
 
 
