@@ -8,10 +8,10 @@ library(scales)
 
 options(scipen=999)
 
-cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#0072B2", "#D55E00", "#CC79A7")
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
 neighbor_sf <- geojson_sf("/home/rstudio/project/source_data/Boston_Neighborhoods.geojson")
-boston_demo <- read.csv("derived_data/boston_demo.csv")
+boston_demo <- read.csv("/home/rstudio/project/derived_data/boston_demo.csv")
 neighbor_sf <- left_join(neighbor_sf, boston_demo, by = c("Name" = "neighborhood"))
 
 boston_map_1 <- ggplot(neighbor_sf) +
@@ -38,9 +38,9 @@ g_bi <- ggplot(boston_demo, aes(percapita, n)) +
   scale_y_continuous(limits = c(0, 400), breaks = seq(0,400, 50)) 
 ggsave("figures/boston_income_stops.png", width = 5, height = 3,  plot=g_bi)
 
-pop_stops <- read.csv("derived_data/municipality_stops.csv")
-pop_stops_nb <- read.csv("derived_data/municipality_stops_NoBoston.csv")
-stop_info <- read.csv("derived_data/stop_info.csv")
+pop_stops <- read.csv("/home/rstudio/project/derived_data/municipality_stops.csv")
+pop_stops_nb <- read.csv("/home/rstudio/project/derived_data/municipality_stops_NoBoston.csv")
+stop_info <- read.csv("/home/rstudio/project/derived_data/stop_info.csv")
 
 g <- ggplot(pop_stops, aes(population, n)) +
   geom_point(alpha = 0.5) +
@@ -55,12 +55,12 @@ g_nb <-ggplot(pop_stops_nb, aes(population, n)) +
   scale_y_continuous(limits = c(0, 600), breaks = seq(0,600, 50)) 
 ggsave("figures/population_stops_noBoston.png", width = 5, height = 3,  plot=g_nb)
 
-g_inc <-ggplot(pop_stops_nb, aes(dor_income_per_capita_19, n)) +
+g_inc <-ggplot(pop_stops_nb, aes(dor.income.per.capita_19, n)) +
   geom_point() +
   labs(title = "Per-Capita Income 2019 and # Stops", x = "Per-Capita Income", y= "# Stops")
 ggsave("figures/income_stops_noBoston.png", width = 5, height = 3,  plot=g_inc)
 
-g_eqv <-ggplot(pop_stops_nb, aes(eqv_per_capita_19, n)) +
+g_eqv <-ggplot(pop_stops_nb, aes(eqv.per.capita_19, n)) +
   geom_point() +
   labs(title = "Per-Capita Property Value 2019 and # Stops", x = "Per-Capita EQV", y= "# Stops")
 ggsave("figures/eqv_stops_noBoston.png", width = 5, height = 3,  plot=g_eqv)
@@ -124,6 +124,14 @@ g_ropg<- ggplot(rt_peak %>% filter(gtfs_route_id %in% c("Green-B", "Green-C", "G
   (scale_x_date(labels=date_format("%b %y"))) +
   scale_color_manual(values = c("Green-B" = "#02231c", "Green-C" = "#004d25", "Green-D" = "#11823b", "Green-E" = "#48bf53"))
 ggsave("figures/rtg_offpeak.png", width = 5, height = 3,  plot=g_ropg) 
+
+full_bus <-read.csv("/home/rstudio/project/derived_data/reliability_bus_full.csv")
+
+ggplot(full_bus %>% filter(peak_offpeak_ind=="OFF_PEAK"), aes(x=ridership, y=mean, color=year)) +
+  geom_point()
+
+ggplot(full_bus %>% filter(peak_offpeak_ind=="OFF_PEAK"), aes(x=ridership, y=maximum, color=year)) +
+  geom_point()
 
 
 

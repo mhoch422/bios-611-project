@@ -14,18 +14,22 @@ derived_data/stop_info.csv\
  derived_data/fin_info.csv\
  derived_data/boston_stop_info.csv\
  derived_data/boston_demo.csv\
- derived_data/reliability_RT.csv\
- derived_data/reliability_bus.csv\
- derived_data/stop_ridership.csv\
  derived_data/municipality_stops_NoBoston.csv: preprocess.R\
  source_data/Boston_Neighborhoods.geojson\
  source_data/Boston_Neighborhoods_tables.xlsm\
  source_data/Bus_Stops.csv\
  source_data/RT_stops.csv\
- source_data/population.csv\
- source_data/Reliability.csv\
- source_data/Ridership.csv
+ source_data/population.csv
 	Rscript preprocess.R
+
+derived_data/reliability_RT.csv\
+ derived_data/reliability_bus.csv\
+ derived_data/reliability_bus_full.csv\
+ derived_data/stop_ridership.csv: ridership_reliability_preprocess.R\
+ source_data/Reliability.csv\
+ source_data/Ridership.csv\
+ source_data/Bus_Stops.csv
+	Rscript ridership_reliability_preprocess.R
 
 figures/population_stops.png\
  figures/bus_onpeak.png\

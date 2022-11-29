@@ -76,25 +76,25 @@ mass_inc2019 <- read.csv("/home/rstudio/project/source_data/DOR_Income_EQV_Per_C
 names(mass_inc2019) <- simplify_strings(names(mass_inc2019))
 mass_inc2019 <- mass_inc2019 %>% 
   mutate(across(everything(), rm_commas)) %>% 
-  select(municipality, dor_income_per_capita, eqv_per_capita) %>% 
+  select(municipality, dor.income.per.capita, eqv.per.capita) %>% 
   filter(municipality %in% metro_mun) %>% 
-  mutate_at(vars(dor_income_per_capita, eqv_per_capita), as.numeric)
+  mutate_at(vars(dor.income.per.capita, eqv.per.capita), as.numeric)
 
 mass_inc2020 <- read.csv("/home/rstudio/project/source_data/DOR_Income_EQV_Per_Capita_2020.csv")
 names(mass_inc2020) <- simplify_strings(names(mass_inc2020))
 mass_inc2020 <- mass_inc2020 %>% 
   mutate(across(everything(), rm_commas)) %>% 
-  select(municipality, dor_income_per_capita, eqv_per_capita) %>% 
+  select(municipality, dor.income.per.capita, eqv.per.capita) %>% 
   filter(municipality %in% metro_mun) %>% 
-  mutate_at(vars(dor_income_per_capita, eqv_per_capita), as.numeric)
+  mutate_at(vars(dor.income.per.capita, eqv.per.capita), as.numeric)
 
 mass_inc2021 <- read.csv("/home/rstudio/project/source_data/DOR_Income_EQV_Per_Capita_2021.csv")
 names(mass_inc2021) <- simplify_strings(names(mass_inc2021))
 mass_inc2021 <- mass_inc2021 %>% 
   mutate(across(everything(), rm_commas)) %>% 
-  select(municipality, dor_income_per_capita, eqv_per_capita) %>% 
+  select(municipality, dor.income.per.capita, eqv.per.capita) %>% 
   filter(municipality %in% metro_mun) %>% 
-  mutate_at(vars(dor_income_per_capita, eqv_per_capita), as.numeric)
+  mutate_at(vars(dor.income.per.capita, eqv.per.capita), as.numeric)
 names(mass_inc2021) <- c("municipality", "dor_income_per_capita_21", "eqv_per_capita_21")
 
 mass_fin <- mass_inc2019 %>% 
@@ -113,66 +113,5 @@ pop_stops %>% write_csv("derived_data/municipality_stops.csv")
 pop_stops_nb <- pop_stops %>% filter(municipality != "Boston")
 pop_stops_nb %>% write_csv("derived_data/municipality_stops_NoBoston.csv")
 
-ridership <- read.csv("/home/rstudio/project/source_data/ridership.csv")
-#ridership$trip_start_time2 <- times(ridership$trip_start_time)
-ridership_group <- ridership %>% 
-  filter(season=="Fall 2016") %>% 
-  filter(day_type_name == "weekday") %>%
-  group_by(route_id) %>%
-  tally(boardings) %>%
-  arrange(desc(n))
-
-ridership_group2 <- ridership %>% 
-  filter(season=="Fall 2016") %>% 
-  filter(day_type_name == "weekday") %>%
-  group_by(route_id, stop_id) %>%
-  tally(boardings) %>%
-  arrange(desc(n))
-
-ridership_group2$stop_id <- as.character(ridership_group2$stop_id)
-
-ridership_top <- ridership_group %>%
-  filter(n > 10000)
-
-names(ridership_top) <- c("gtfs_route_id", "ridership")
-
-rm(ridership)
-
-reliability <- read.csv("/home/rstudio/project/source_data/reliability.csv")
-reliability$service_date <- as_date(reliability$service_date)
-reliability$month <- month(reliability$service_date)
-reliability$year <- year(reliability$service_date)
-reliability <- reliability %>% filter(year > 2017)
-reliability$rel_m <- reliability$otp_numerator/reliability$otp_denominator
-reliability_bus <- reliability %>% 
-  inner_join(ridership_top, by = "gtfs_route_id") %>%
-  group_by(gtfs_route_id, year, month,peak_offpeak_ind) %>%
-  summarise(mean=mean(rel_m), minimum = min(rel_m), maximum=max(rel_m))
-
-reliability_bus$date <- as_date(paste0(reliability_bus$year,"-",reliability_bus$month,"-01"))
-
-reliability_RT <- reliability %>% 
-  filter(mode_type == "Rail") %>%
-  group_by(gtfs_route_id, year, month,peak_offpeak_ind) %>%
-  summarise(mean=mean(rel_m), minimum = min(rel_m), maximum=max(rel_m))
-reliability_RT$date <- as_date(paste0(reliability_RT$year,"-",reliability_RT$month,"-01"))
-
-
-reliability_bus %>% write.csv("/home/rstudio/project/derived_data/reliability_bus.csv")
-reliability_RT %>% write.csv("/home/rstudio/project/derived_data/reliability_RT.csv")
-
-stops_and_routes <- bus_stops %>% left_join(ridership_group2, by="stop_id")
-names(stops_and_routes) <- simplify_strings(names(stops_and_routes))
-sandr_trimmed <- stops_and_routes %>% select(stop_id, stop_lat, stop_lon, zone_id, 
-                                             level_id, wheelchair_boarding, municipality,
-                                             vehicle_type, sidewalk_width_ft, accessibility_score,
-                                             sidewalk_condition, sidewalk_material, current_shelter,
-                                             n)
-
-sandr_trimmed$sidewalk_width_ft <- round(as.numeric(sandr_trimmed$sidewalk_width_ft), 1)
-
-sandr_trimmed <- sandr_trimmed %>% mutate(across(everything(), simplify_strings))
-
-sandr_trimmed %>% write.csv("/home/rstudio/project/derived_data/stop_ridership.csv")
 
 

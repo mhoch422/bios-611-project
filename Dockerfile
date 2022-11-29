@@ -15,5 +15,6 @@ RUN R -e "install.packages('spData');"
 RUN R -e "install.packages('markdown');"
 RUN R -e "install.packages('scales');"
 RUN R -e "install.packages('chron');"
+RUN R -e "install.packages('gbm');"
 RUN Rscript --no-restore --no-save -e "update.packages(ask = FALSE);"
 
