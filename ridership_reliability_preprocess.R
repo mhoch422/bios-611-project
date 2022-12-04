@@ -59,7 +59,7 @@ reliability$rel_m <- reliability$otp_numerator/reliability$otp_denominator
 
 reliability_bus_full <- reliability %>%
   filter(mode_type=="Bus") %>%
-  filter(month == 1) %>%
+  #filter(month == 1) %>%
   group_by(gtfs_route_id, year, month,peak_offpeak_ind) %>%
   summarise(mean=mean(rel_m), minimum = min(rel_m), maximum=max(rel_m)) %>%
   inner_join(ridership_group, by = "gtfs_route_id")
@@ -77,9 +77,9 @@ reliability_RT <- reliability %>%
   summarise(mean=mean(rel_m), minimum = min(rel_m), maximum=max(rel_m))
 reliability_RT$date <- as_date(paste0(reliability_RT$year,"-",reliability_RT$month,"-01"))
 
-reliability_bus_full %>% write.csv("/home/rstudio/project/derived_data/reliability_bus_full.csv")
-reliability_bus %>% write.csv("/home/rstudio/project/derived_data/reliability_bus.csv")
-reliability_RT %>% write.csv("/home/rstudio/project/derived_data/reliability_RT.csv")
+reliability_bus_full %>% write.csv("/home/rstudio/project/derived_data/reliability_bus_full.csv", row.names=FALSE)
+reliability_bus %>% write.csv("/home/rstudio/project/derived_data/reliability_bus.csv", row.names=FALSE)
+reliability_RT %>% write.csv("/home/rstudio/project/derived_data/reliability_RT.csv", row.names=FALSE)
 
 stops_and_routes <- bus_stops %>% left_join(ridership_group2, by="stop_id")
 names(stops_and_routes) <- simplify_strings(names(stops_and_routes))
@@ -93,6 +93,18 @@ sandr_trimmed$sidewalk_width_ft <- round(as.numeric(sandr_trimmed$sidewalk_width
 
 sandr_trimmed <- sandr_trimmed %>% mutate(across(everything(), simplify_strings))
 
-sandr_trimmed %>% write.csv("/home/rstudio/project/derived_data/stop_ridership.csv")
+sandr_trimmed %>% write.csv("/home/rstudio/project/derived_data/stop_ridership.csv", row.names= FALSE)
+
+stop_ridership_mun <- sandr_trimmed %>% 
+  group_by(municipality, stop_id) %>% 
+  summarise(mean=mean(n, na.rm=TRUE)) %>%
+  group_by(municipality) %>%
+  summarise(avg = mean(mean, na.rm=TRUE), 
+            min = min(mean, na.rm=TRUE),
+            max = max(mean, na.rm=TRUE),
+            tot_stops=n()) %>%
+  filter(is.na(mean)==FALSE)
+
+stop_ridership_mun %>% write.csv("/home/rstudio/project/derived_data/stop_ridership_mun.csv", row.names= FALSE)
 
 

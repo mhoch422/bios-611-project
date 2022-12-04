@@ -11,6 +11,8 @@ library(gbm)
 
 stop_ridership <- read.csv("/home/rstudio/project/derived_data/stop_ridership.csv")
 
+
+
 #pca_results <- prcomp(stop_ridership %>% select(-character, -universe) %>% as.matrix())
 
 ggplot(stop_ridership, aes(zone_id)) +

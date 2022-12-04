@@ -25,6 +25,7 @@ derived_data/stop_info.csv\
 derived_data/reliability_RT.csv\
  derived_data/reliability_bus.csv\
  derived_data/reliability_bus_full.csv\
+ derived_data/stop_ridership_mun.csv\
  derived_data/stop_ridership.csv: ridership_reliability_preprocess.R\
  source_data/Reliability.csv\
  source_data/Ridership.csv\
