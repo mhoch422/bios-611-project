@@ -54,7 +54,7 @@ confusion %>% write.csv("/home/rstudio/project/model_data/stop_classification.cs
 
 roc_info <- roc(test$boardings, test$boardings_p)
 
-png("figures/roc_plot.png")
+png("figures/roc_plot.png", width = 400, height = 250)
 plot(roc_info)
 dev.off()
 

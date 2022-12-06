@@ -108,3 +108,13 @@ offpeak_rtest_df <- data.frame(" " = c("T-Statistic", "DoF", "p-value", "estimat
                                       paste0("(", round(offpeak_rtest$conf.int[1],2), ", ", round(offpeak_rtest$conf.int[2],2),")")))
 names(offpeak_rtest_df) <- c("Label","Value")
 offpeak_rtest_df %>% write_csv("/home/rstudio/project/derived_data/roffpeaktest.csv")
+
+
+m <- lm(mean*100~ridership+peak_offpeak_ind+ridership*peak_offpeak_ind, reliability_full)
+
+sc <- ggplot(data = reliability_full, aes(x = ridership, y = mean*100)) +
+  geom_point(aes(color=peak_offpeak_ind)) +
+  stat_smooth(method = "lm") + 
+  labs(title = "Linear Regression Ridership v. Reliability", x = "Ridership", y = "Mean Reliability")
+relvrid <- sc + facet_grid(peak_offpeak_ind ~ .)
+ggsave("figures/relvrid.png", width = 5, height = 3,  plot=relvrid)

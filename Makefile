@@ -62,6 +62,7 @@ figures/bus_onpeak.png\
 derived_data/peaktest.csv\
  derived_data/rpeaktest.csv\
  derived_data/roffpeaktest.csv\
+ figures/relvrid.png\
  derived_data/offpeaktest.csv: reliability_tests.R\
  derived_data/reliability_bus_full.csv\
  derived_data/reliability_RT.csv
@@ -84,8 +85,11 @@ writeup.pdf: figures/population_stops.png\
  figures/income_stops_noBoston.png\
  figures/eqv_stops_noBoston.png\
  figures/population_stops_noBoston.png\
+ figures/roc_plot.png\
+ figures/gbm_inf.png\
  derived_data/offpeaktest.csv\
  derived_data/peaktest.csv\
  derived_data/rpeaktest.csv\
+ figures/relvrid.png\
  derived_data/roffpeaktest.csv
 	Rscript -e "rmarkdown::render('writeup.Rmd')"

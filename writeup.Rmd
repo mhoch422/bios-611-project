@@ -75,3 +75,8 @@ kable(read.csv("/home/rstudio/project/derived_data/roffpeaktest.csv"))
 kable(read.csv("/home/rstudio/project/derived_data/rpeaktest.csv"))
 
 ```
+
+![](figures/gbm_inf.png)
+
+![](figures/roc_plot.png)
+![](figures/relvrid.png)
