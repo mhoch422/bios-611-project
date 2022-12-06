@@ -6,6 +6,7 @@ author: "Molly Hoch"
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, out.width='400px', out.height = '200px')
+library(DT)
 ```
 
 ## Bus/Rapid Transit Stops 
@@ -62,3 +63,10 @@ After making these maps, I created similar figures to those for non-boston stops
 
 ![](figures/boston_income_stops.png)
 
+```{r}
+
+datatable(read_csv("/home/rstudio/project/derived_data/offpeaktest.csv"))
+
+datatable(read_csv("/home/rstudio/project/derived_data/peaktest.csv"))
+
+```

@@ -55,6 +55,11 @@ figures/population_stops.png\
  derived_data/municipality_stops_NoBoston.csv
 	Rscript initial_figures.R
 
+derived_data/peaktest.csv\
+ derived_data/offpeaktest.csv: reliability_tests.R\
+ derived_data/reliability_bus_full.csv
+	Rscript reliability_tests.R
+
 # Build the final report for the project.
 writeup.pdf: figures/population_stops.png\
  figures/boston_income_stops.png\
@@ -64,5 +69,7 @@ writeup.pdf: figures/population_stops.png\
  figures/boston_map_numstops.png\
  figures/income_stops_noBoston.png\
  figures/eqv_stops_noBoston.png\
- figures/population_stops_noBoston.png
+ figures/population_stops_noBoston.png\
+ derived_data/offpeaktest.csv\
+ derived_data/peaktest.csv
 	Rscript -e "rmarkdown::render('writeup.Rmd')"
