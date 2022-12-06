@@ -2,11 +2,12 @@
 title: "Project Report"
 output: pdf_document
 author: "Molly Hoch"
+always_allow_html: true
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, out.width='400px', out.height = '200px')
-library(DT)
+library(knitr)
 ```
 
 ## Bus/Rapid Transit Stops 
@@ -63,10 +64,14 @@ After making these maps, I created similar figures to those for non-boston stops
 
 ![](figures/boston_income_stops.png)
 
-```{r}
+```{r echo=FALSE}
 
-datatable(read_csv("/home/rstudio/project/derived_data/offpeaktest.csv"))
+kable(read.csv("/home/rstudio/project/derived_data/offpeaktest.csv"))
 
-datatable(read_csv("/home/rstudio/project/derived_data/peaktest.csv"))
+kable(read.csv("/home/rstudio/project/derived_data/peaktest.csv"))
+
+kable(read.csv("/home/rstudio/project/derived_data/roffpeaktest.csv"))
+
+kable(read.csv("/home/rstudio/project/derived_data/rpeaktest.csv"))
 
 ```
