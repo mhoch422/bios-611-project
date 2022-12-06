@@ -46,3 +46,5 @@ ggplot(stop_ridership, aes(accessibility_score)) +
 ggplot(stop_ridership, aes(current_shelter)) +
   geom_bar() +
   theme(axis.text.x = element_text(angle=90, vjust=.5, hjust=1))
+
+
