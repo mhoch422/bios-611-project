@@ -43,6 +43,8 @@ ridership_group2 <- ridership %>%
   tally(boardings) %>%
   arrange(desc(n))
 
+names(ridership_group2) <- c("route_id", "stop_id", "boardings")
+
 ridership_group2$stop_id <- as.character(ridership_group2$stop_id)
 
 ridership_top <- ridership_group %>%
@@ -85,13 +87,17 @@ stops_and_routes <- bus_stops %>% left_join(ridership_group2, by="stop_id")
 names(stops_and_routes) <- simplify_strings(names(stops_and_routes))
 sandr_trimmed <- stops_and_routes %>% select(stop_id, stop_lat, stop_lon, zone_id, 
                                              level_id, wheelchair_boarding, municipality,
-                                             vehicle_type, sidewalk_width_ft, accessibility_score,
+                                             sidewalk_width_ft, accessibility_score,
                                              sidewalk_condition, sidewalk_material, current_shelter,
-                                             n)
+                                             boardings)
 
 sandr_trimmed$sidewalk_width_ft <- round(as.numeric(sandr_trimmed$sidewalk_width_ft), 1)
 
-sandr_trimmed <- sandr_trimmed %>% mutate(across(everything(), simplify_strings))
+sandr_trimmed <- sandr_trimmed %>% 
+  mutate(across(c(zone_id, level_id, municipality, accessibility_score,
+                  sidewalk_condition, sidewalk_material, current_shelter), simplify_strings))
+
+sandr_trimmed <- na.omit(sandr_trimmed)
 
 sandr_trimmed %>% write.csv("/home/rstudio/project/derived_data/stop_ridership.csv", row.names= FALSE)
 
