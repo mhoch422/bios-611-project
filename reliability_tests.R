@@ -117,4 +117,4 @@ sc <- ggplot(data = reliability_full, aes(x = ridership, y = mean*100)) +
   stat_smooth(method = "lm") + 
   labs(title = "Linear Regression Ridership v. Reliability", x = "Ridership", y = "Mean Reliability")
 relvrid <- sc + facet_grid(peak_offpeak_ind ~ .)
-ggsave("figures/relvrid.png", width = 5, height = 3,  plot=relvrid)
+ggsave("figures/relvrid.png", width = 8, height = 6,  plot=relvrid)

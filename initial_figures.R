@@ -5,6 +5,7 @@ library(plotly)
 library(sf)
 library(geojsonsf)
 library(scales)
+pdf(NULL)
 
 options(scipen=999)
 
@@ -15,16 +16,31 @@ boston_demo <- read.csv("/home/rstudio/project/derived_data/boston_demo.csv")
 neighbor_sf <- left_join(neighbor_sf, boston_demo, by = c("Name" = "neighborhood"))
 
 boston_map_1 <- ggplot(neighbor_sf) +
-  geom_sf(aes(fill=n))
-ggsave("figures/boston_map_numstops.png", width = 6, height = 4, plot= boston_map_1)
+  geom_sf(aes(fill=n)) +
+  theme(axis.text.x=element_blank(), #remove x axis labels
+        axis.ticks.x=element_blank(), #remove x axis ticks
+        axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank()  #remove y axis ticks
+  )
+ggsave("figures/boston_map_numstops.png", width = 3, height = 3, plot= boston_map_1)
 
 boston_map_2 <- ggplot(neighbor_sf) + 
-  geom_sf(aes(fill=percapita))
-ggsave("figures/boston_map_income.png", width = 6, height = 4,  plot= boston_map_2)
+  geom_sf(aes(fill=percapita))+
+  theme(axis.text.x=element_blank(), #remove x axis labels
+        axis.ticks.x=element_blank(), #remove x axis ticks
+        axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank()  #remove y axis ticks
+  )
+ggsave("figures/boston_map_income.png", width = 3, height = 3,  plot= boston_map_2)
 
 boston_map_3 <- ggplot(neighbor_sf) + 
-  geom_sf(aes(fill=population))
-ggsave("figures/boston_map_pop.png", width = 6, height = 4,  plot= boston_map_3)
+  geom_sf(aes(fill=population))+
+  theme(axis.text.x=element_blank(), #remove x axis labels
+        axis.ticks.x=element_blank(), #remove x axis ticks
+        axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank()  #remove y axis ticks
+  )
+ggsave("figures/boston_map_pop.png", width = 3, height = 3,  plot= boston_map_3)
 
 g_bp <- ggplot(boston_demo, aes(population, n)) +
   geom_point(alpha = 0.5) +

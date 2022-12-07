@@ -3,6 +3,8 @@ library(gbm)
 library(matlab)
 library(pROC)
 library(ggplot2)
+pdf(NULL)
+
 
 dir.create("model_data")
 stop_ridership <- read.csv("/home/rstudio/project/derived_data/stop_ridership.csv", header=TRUE, stringsAsFactors = TRUE)
@@ -55,7 +57,7 @@ confusion %>% write.csv("/home/rstudio/project/model_data/stop_classification.cs
 roc_info <- roc(test$boardings, test$boardings_p)
 
 png("figures/roc_plot.png", width = 400, height = 250)
-plot(roc_info)
+p<- plot(roc_info)
 dev.off()
 
 

@@ -5,6 +5,7 @@ clean:
 	rm -rf derived_data
 	rm -rf writeup.pdf
 	rm -rf model_data
+	rm -rf RPlots.pdf
 
 .created-dirs:
 	mkdir -p figures
@@ -57,7 +58,7 @@ figures/bus_onpeak.png\
  figures/rtg_onpeak.png: reliability_figures.R\
  derived_data/reliability_bus.csv\
  derived_data/reliability_RT.csv
-	reliability_figures.R
+	Rscript reliability_figures.R
 
 derived_data/peaktest.csv\
  derived_data/rpeaktest.csv\
@@ -85,6 +86,12 @@ writeup.pdf: figures/population_stops.png\
  figures/income_stops_noBoston.png\
  figures/eqv_stops_noBoston.png\
  figures/population_stops_noBoston.png\
+ figures/bus_onpeak.png\
+ figures/bus_offpeak.png\
+ figures/rt_onpeak.png\
+ figures/rt_offpeak.png\
+ figures/rtg_offpeak.png\
+ figures/rtg_onpeak.png\
  figures/roc_plot.png\
  figures/gbm_inf.png\
  derived_data/offpeaktest.csv\
