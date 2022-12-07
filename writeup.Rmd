@@ -1,14 +1,39 @@
 ---
-title: "Project Report"
+title: "BIOS 611 Final Report"
 output: pdf_document
 author: "Molly Hoch"
+date: "December 7, 2022"
 always_allow_html: true
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, out.width='400px', out.height = '200px')
+knitr::opts_chunk$set(echo = FALSE, out.width='400px', out.height = '200px')
 library(knitr)
 ```
+
+# MBTA Bus and Rapid Transit Reliability before and after the onset of the COVID-19 pandemic
+
+## Background on the Data
+
+This project used several data sets from the Massachusetts Bay Transit Authority (MBTA), which operates an open data portal at https://mbta-massdot.opendata.arcgis.com. The MBTA operates bus, rapid transit (tram and subway), commuter rail trains, and ferries in Boston and the surrounding area, with commuter rail branches extending as far as Worcester, Massachusetts and Providence, Rhode Island. This project is concerned only with bus and rapid transit, which together serve forty-nine municipalities in eastern Massachusetts.
+
+The data sets used are Bus Stops; Rapid Transit Stops; MBTA Bus Ridership by Time Period, Season, Route/Line, and Stop; and MBTA Bus, Commuter Rail, & Rapid Transit Reliability.
+
+Additionally, some data sets were available from the state of Massachusetts and the City of Boston, used for demographic information on population and income. These can be found here: https://data.boston.gov/ for Boston, and https://www.mass.gov/massachusetts-data-hub for Massachusetts.
+
+Bus Stops (https://mbta-massdot.opendata.arcgis.com/datasets/MassDOT::bus-stops/about) is a map layer containing details about the latitude/longitude of bus stops, their municipality, routes served, and general information about the stops, such as wheelchair accessibility, sidewalk condition, and whether or not there is a bus shelter, for example. This data was downloaded as a csv and used for background investigation, as well as some analysis later in the project. The Rapid Transit Stops data set was also downloaded as a csv and primarily used for background investigation.
+
+The MBTA Bus Ridership by Time Period, Season, Route/Line, and Stop (https://mbta-massdot.opendata.arcgis.com/datasets/MassDOT::mbta-bus-ridership-by-time-period-season-route-line-and-stop/about) is a large data table which summarizes bus ridership for each year from 2016-2019 (more recent data was not available). The average number of people boarding and exiting at each stop along each route was included for different time periods (e.g. morning rush hour) on three types of days: weekdays, saturdays, and sundays. The data from Fall 2019 (the most recent) was used during background exploration and for analysis later in the project.
+
+The MBTA Bus, Commuter Rail, & Rapid Transit Reliability (https://mbta-massdot.opendata.arcgis.com/datasets/MassDOT::mbta-bus-commuter-rail-rapid-transit-reliability/about) data set was the primary data of interest in this project. It includes information for most days from 2015 and now, usually with a one- to two-month delay in updating.For this project, Commuter Rail data was not included. All bus routes and the seven rapid transit lines were included. Each day includes peak and off-peak metrics. These metrics for rapid transit were based on "Passenger Wait Time" and for buses were based on "Headway/Schedule Adherence". For rapid transit, this means reliability is the "percent of passengers traveling in each time period that wait the scheduled headway, or less, at each station" (https://cdn.mbta.com/sites/default/files/2021-06/2021-service-delivery-policy.pdf). Scheduled headway refers to how frequently a transit vehicle is supposed to arrive. As an example, a subway line might have expected headway of four minutes, which is to say that a train should arrive to the platform roughly every four minutes. For buses, this means reliability is the percentage of bus trips which arrived within a small grace period around their scheduled time of departure, for infrequent service; or the percentage that arrived within a grace period of their expected headway, for frequent service. The data set indicates whether a bus provides local or frequent service.
+
+## Motivating Questions
+
+At the onset of this project, the goal was to see the impact (if any) of the ongoing COVID-19 pandemic on the reliability of services provided by the MBTA. Starting in March 2020, there were frequent changes to service, including a decrease in frequency of routes as a result of decreased use of bus and rapid transit. At the same time, there was a decrease in traffic congestion, which could positively impact bus reliability, as well as several improvement projects on different rapid transit lines which could have shown an impact. 
+
+As the data were investigated further, additional questions arose, particularly about the impact of socioeconomic factors by municipality and neighborhood (Boston-specific) on use of public transit, not just during the pandemic but more generally. Due to time constraints and lack of recent data, these questions remain open, but some of the early exploratory work is included in this report. Another question regarded the impact of bus stop features on ridership, and some analysis was conducted on this question.
+
+\newpage
 
 ## Bus/Rapid Transit Stops 
 
@@ -20,40 +45,24 @@ To start, a plot of municipality population and the number of stops in said muni
 
 It's hard to get a sense for what relationship (if any) there for municipalities other than Boston (which has a population over 600K and nearly 2000 stops).
 
-\newpage
-
 I recreated the above plot, removing Boston:
 
 ![](figures/population_stops_noBoston.png)
 
-Some other demographics compared with number of stops include per-capita income:
+\newpage
+
+Additionally, I compared with number of stops include per-capita income:
 
 ![](figures/income_stops_noBoston.png)
 
+An initial look at these plots suggests that population is the greatest driving force behind number of stops for municipalities outside of Boston.
+
 \newpage
 
-And property value:
-
-![](figures/eqv_stops_noBoston.png)
-
-An initial look at these plots suggests that population is the greatest driving force behind number of stops for municipalities outside of Boston (this is something I intend to look at more).
-
-I also wanted to begin looking at the data for Boston proper. The city of Boston has 26 neighborhoods, and demographic information is available for 22 of them. Using a geojson file and census data, both made available by the city of Boston, I made the following maps to get a sense for the neighborhoods.
-
-First, mapping the population by neighborhood:
+I also wanted to begin looking at the data for Boston proper. The city of Boston has 26 neighborhoods, and demographic information is available for 22 of them. Using a geojson file and census data, both made available by the city of Boston, I made the following maps to get a sense for the neighborhoods. In order, they are population by neighborhood, number of stops by neighborhood, and per-capita income by neighborhood.
 
 ![](figures/boston_map_pop.png)
-
-\newpage
-
-Then, mapping the number of stops by neighborhood:
-
 ![](figures/boston_map_numstops.png)
-
-\newpage
-
-And lastly, mapping the per-capita income by neighborhood:
-
 ![](figures/boston_map_income.png)
 
 \newpage
@@ -64,19 +73,122 @@ After making these maps, I created similar figures to those for non-boston stops
 
 ![](figures/boston_income_stops.png)
 
+Similarly as with municipalities outside of Boston, population seems to be the driving factor behind the number of stops in a given neighborhood, although it also looks like there may be an inverse relationship between neighborhood income and number of stops.
+
+Due to an inability to get up-to-date data on income, both inside and outside of Boston, this was the extent of the work with demographic data I conducted.
+
+\newpage
+
+## Initial Reliability Metrics
+
+To see if the first motivating question made sense, plots were created of mean monthly reliability for the time period from the years immediately preceiding the pandemic to June 2022, separating out peak and off-peak reliability. For the sake of useful visualizations, the Red, Orange, and Blue lines are in one set of figures and the four Green lines are in another.
+
+![Peak Mean Monthly Reliability for MBTA Heavy Rail](figures/rt_onpeak.png)
+![Off-Peak Mean Monthly Reliability for MBTA Heavy Rail](figures/rt_offpeak.png)
+![Peak Mean Monthly Reliability for MBTA Light Rail](figures/rtg_onpeak.png)
+!["Off Peak Mean Monthly Reliability for MBTA Light Rail"](figures/rtg_offpeak.png)
+
+There did not appear to be a strong pattern in mean monthly reliability for any of the lines, but it was possible to see some events possibly reflected in the figures -- particularly Orange Line construction in early 2021.
+
+\newpage
+
+For buses, the story was similar, although notably there is no data for peak buses from March to September 2020:
+
+![Peak Mean Monthly Reliability for Eight Most-Used MBTA Bus Routes](figures/bus_onpeak.png)
+![Off-Peak Mean Monthly Reliability for Eight Most-Used MBTA Bus Routes](figures/bus_offpeak.png)
+
+\newpage
+
+## Difference in Reliability Before and After Onset of Pandemic
+
+As a result of the lack of data for buses at the beginning of the pandemic, instead of looking directly at those months, the next step taken was to compare mean reliability from September 2019 to mean reliability in September 2020. 
+
+To find this out, I used t-tests to compare mean reliability separately for all peak bus routes, all off-peak bus routes, all peak rapid transit routes, and all off-peak rapid transit routes; four tests in all. To avoid the potential for accidental p-hacking, I set the p-value to 0.0125 rather than the typical 0.05. For all tests, the null hypothesis was that mean reliability was the same between September 2019 and September 2020.
+
+### Results
+
+#### Off-Peak Bus Reliability
+
 ```{r echo=FALSE}
 
 kable(read.csv("/home/rstudio/project/derived_data/offpeaktest.csv"))
 
+```
+
+Here, the p-value easily allows for rejection of the null hypothesis and the conclusion that mean reliability differed between September 2019 and September 2020, with an estimate of a 9% increase in reliability (95% CI: (7%, 10%)).
+
+#### Peak Bus Reliability
+
+```{r}
+
 kable(read.csv("/home/rstudio/project/derived_data/peaktest.csv"))
 
+```
+
+Here, the p-value again allows for rejection of the null hypothesis and the conclusion that mean reliability differed between September 2019 and September 2020, with an estimate of a 13% increase in reliability (95% CI: (11%, 16%)).
+
+#### Off-Peak Rapid Transit Reliability
+
+```{r}
+
 kable(read.csv("/home/rstudio/project/derived_data/roffpeaktest.csv"))
+
+```
+
+Here, the p-value does not allow for rejection of the null hypothesis, providing evidence that the mean reliability did not change between September 2019 and September 2020 for off-peak rapid transit.
+
+#### Peak Rapid Transit Reliability
+
+```{r}
 
 kable(read.csv("/home/rstudio/project/derived_data/rpeaktest.csv"))
 
 ```
 
+Here, the p-value does not allow for rejection of the null hypothesis, providing evidence that the mean reliability did not change between September 2019 and September 2020 for off-peak rapid transit; additionally, the estimated change is in fact zero.
+
+### Conclusion
+
+Between September 2019 and September 2020, there was a shift upward in reliability for both peak and off-peak buses, with a slightly higher increase for peak buses. There was no clear change in reliability for rapid transit.
+
+\newpage
+
+## Relationship between Ridership and Reliability
+
+To investigate if there were a relationship between ridership and reliability for buses, I created a linear model, again separating out peak and off-peak numbers:
+
+![](figures/relvrid.png)
+
+There appears to be an increase in reliability along with an increase in ridership, but perhaps more notable is the decrease in variability of reliability as ridership increases.
+
+\newpage
+
+## Classifying Bus Stops
+
+One final investigation using this data concerning trying to classify bus stops as "heavy-use" (boarding at least 50 people at a time) versus "non-heavy-use" (all other stops), based on the data about their characteristics, such as wheelchair boarding or presence of a shelter. To do this, I implemented an Adaboost model, which returned the following:
+
+```{r}
+
+kable(read.csv("/home/rstudio/project/model_data/gbm_results.csv"))
+
+```
+
 ![](figures/gbm_inf.png)
 
+Current shelter (whether there is a shelter, and if so, who maintains the shelter) and municipality tend to have the largest influence on whether or not a stop is high-use.
+
+\newpage
+
+This model has these values for true negative, false positive, true positive, and false negative:
+
+```{r}
+
+kable(read.csv("/home/rstudio/project/model_data/stop_classification.csv"))
+
+```
+
+Even with such a low sensitivity and high false negative rate, the ROC curve shows this Adaboost model performs better than randomly assigning stop type:
+
 ![](figures/roc_plot.png)
-![](figures/relvrid.png)
+
+This could be due to the relatively small number of stops which are "high-use" (1329 out of 10738 total).
